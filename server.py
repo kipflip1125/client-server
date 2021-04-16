@@ -69,9 +69,9 @@ def get_command(file, clientSock, addr):
 
 			while len(fileData) > numSent:
 				numSent += clientSock.send(fileData[numSent:].encode('ascii'))
+			clientSock.send(str(numSent).encode('ascii'))
 		else:
 			break
-	clientSock.send(numSent)
 	fileObj.close()
 
 # Receive Data
@@ -111,12 +111,18 @@ def put_command(clientSock, addr):
 def ls_command(clientSock, addr):
 	lst = os.listdir('.')
 	numSent = 0
+	lslen = len(lst)
+	clientSock.send(str(lslen).rjust(2,'0').encode('ascii'))
+	for i in lst:
+		numSent = len(i)
+		while numSent < 3:
+			numSent = '0' + str(numSent)
+		clientSock.send(str(numSent).rjust(2,'0').encode('ascii'))
+		clientSock.send(i.encode('ascii'))
 	
-	print(len(lst))
-
 def quit_command(clientSock, addr):
-	print('quit')
-		
+	clientSock.close()
+	
 # Accept connections forever
 if __name__ == '__main__':
 	while True:
