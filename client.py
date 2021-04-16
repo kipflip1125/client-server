@@ -84,8 +84,7 @@ def get_command(file, serverAddr, serverPort):
 	print(fileData)
 			
 	# Close our side
-	numlen = connSock.recv(2).decode('ascii')
-	print('Received ', numlen, ' bytes')
+	print('Received ', fileSize, ' bytes')
 	connSock.close()
 
 # Send Data
