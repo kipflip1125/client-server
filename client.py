@@ -35,8 +35,16 @@ def recvAll(sock, numBytes):
 # Receive Data
 def get_command(file, serverAddr, serverPort):
 	# Create a TCP socket and connect to the address and socket port
-	connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	connSock.connect((serverAddr, int(serverPort)))
+	try:
+		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	except:
+		print('Failed to create a socket')
+
+	try:
+		connSock.connect((serverAddr, int(serverPort)))
+	except:
+		print('Failed to connect to ', severAddr, ':', serverPort)
+
 	print("Connected to ", serverAddr, ":", serverPort)
 	connSock.send(b'g')
 	
@@ -76,14 +84,23 @@ def get_command(file, serverAddr, serverPort):
 	print(fileData)
 			
 	# Close our side
-	connSock.recv()
+	numlen = connSock.recv(2).decode('ascii')
+	print('Received ', numlen, ' bytes')
 	connSock.close()
 
 # Send Data
 def put_command(file, serverAddr, serverPort):
 	# Create a TCP socket and connect to the address and socket port
-	connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	connSock.connect((serverAddr, int(serverPort)))
+	try:
+		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	except:
+		print('Failed to create a socket')
+
+	try:
+		connSock.connect((serverAddr, int(serverPort)))
+	except:
+		print('Failed to connect to ', severAddr, ':', serverPort)
+
 	print("Connected to ", serverAddr, ":", serverPort)
 	connSock.send(b'p')
 
@@ -123,7 +140,10 @@ def put_command(file, serverAddr, serverPort):
 			
 			# Send the data!
 			while len(fileData) > numSent:
-				numSent += connSock.send(fileData[numSent:].encode('ascii'))
+				try:
+					numSent += connSock.send(fileData[numSent:].encode('ascii'))
+				except:
+					print('Failed to send message')
 		
 		# The file has been read. We are done
 		else:
@@ -135,18 +155,43 @@ def put_command(file, serverAddr, serverPort):
 # Print out directory
 def ls_command(serverAddr, serverPort):
 	# Create a TCP socket and connect to the address and socket port
-	connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	connSock.connect((serverAddr, int(serverPort)))
+	try:
+		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	except:
+		print('Failed to create a socket')
+
+	try:
+		connSock.connect((serverAddr, int(serverPort)))
+	except:
+		print('Failed to connect to ', severAddr, ':', serverPort)
+	
 	print("Connected to ", serverAddr, ":", serverPort)
 	connSock.send(b'l')
-	print('ls')
+	numBytes = 0
+	numFiles = int(connSock.recv(2).decode('ascii'))
+	for i in range(numFiles):
+		length = connSock.recv(2).decode('ascii')
+		ls_data = connSock.recv(int(length)).decode('ascii')
+		print(ls_data)
+		numBytes = numBytes + len(ls_data)
+	print('Received ', numBytes, ' bytes.')
+	connSock.close()
 
 # Quit
 def quit_command():
 	# Create a TCP socket and connect to the address and socket port
-	connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	connSock.connect((serverAddr, int(serverPort)))
+	try:
+		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	except:
+		print('Failed to create a socket')
+
+	try:
+		connSock.connect((serverAddr, int(serverPort)))
+	except:
+		print('Failed to connect to ', severAddr, ':', serverPort)
+
 	print("Connected to ", serverAddr, ":", serverPort)
+
 	connSock.send(b'q')
 	quit()
 
