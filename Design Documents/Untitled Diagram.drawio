@@ -1,11 +1,47 @@
-<mxfile host="app.diagrams.net" modified="2021-04-21T05:53:29.253Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" etag="O1JLzKXUvVvkqvcLxKPd" version="14.6.1" type="github">
+<mxfile host="app.diagrams.net" modified="2021-04-21T06:16:32.188Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" etag="-71UKuu6TS4mz4gjjeOD" version="14.6.1" type="github">
   <diagram id="MkUvNmN8QnzUUTjbKppb" name="Page-1">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-1" value="Client gets message" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-1" value="Client Sends Message" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="30" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-3" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="89.5" as="sourcePoint" />
+            <mxPoint x="210" y="89.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-4" value="Server Recieves first 10 Bytes which indicates size" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-5" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JkZBiDMy9Vj7Ei_RFcjh-4" target="JkZBiDMy9Vj7Ei_RFcjh-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="200" as="sourcePoint" />
+            <mxPoint x="400" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-6" value="Server Parses rest of message through a loop" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-7" value="Status:Okay" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="50" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-9" value="yes" style="endArrow=classic;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="89.5" as="sourcePoint" />
+            <mxPoint x="510" y="89.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-11" value="Error" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="JkZBiDMy9Vj7Ei_RFcjh-12" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="JkZBiDMy9Vj7Ei_RFcjh-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="190" as="sourcePoint" />
+            <mxPoint x="410" y="170" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
