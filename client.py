@@ -33,27 +33,13 @@ def recvAll(sock, numBytes):
 	return recvBuff
 
 # Receive Data
-def get_command(file, serverAddr, serverPort):
-	# Create a TCP socket and connect to the address and socket port
-	try:
-		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	except:
-		print('Failed to create a socket')
-
-	try:
-		connSock.connect((serverAddr, int(serverPort)))
-	except:
-		print('Failed to connect to ', severAddr, ':', serverPort)
-
-	print("Connected to ", serverAddr, ":", serverPort)
-	connSock.send(b'g')
+def get_command(file, dataSock):
 	
 	fNamelen = len(file)
-	while len(file) < 3:
-		fNamelen = "0" + fNamelen
+	fNamelen = str(fNamelen).rjust(2,'0')
 
-	connSock.send(str(fNamelen).encode('ascii'))
-	connSock.send(file.encode('ascii'))
+	dataSock.send(str(fNamelen).encode('ascii'))
+	dataSock.send(file.encode('ascii'))
 	# The buffer to all data received from the
 	# the client.
 	fileData = ""
@@ -70,7 +56,7 @@ def get_command(file, serverAddr, serverPort):
 		
 	# Receive the first 10 bytes indicating the
 	# size of the file
-	fileSizeBuff = recvAll(connSock, 10)
+	fileSizeBuff = recvAll(dataSock, 10)
 			
 	# Get the file size
 	fileSize = int(fileSizeBuff)
@@ -78,30 +64,17 @@ def get_command(file, serverAddr, serverPort):
 	print("The file size is ", fileSize)
 		
 	# Get the file data
-	fileData = recvAll(connSock, fileSize)
+	fileData = recvAll(dataSock, fileSize)
 		
 	print("The file data is: ")
 	print(fileData)
 			
 	# Close our side
 	print('Received ', fileSize, ' bytes')
-	connSock.close()
+	dataSock.close()
 
 # Send Data
-def put_command(file, serverAddr, serverPort):
-	# Create a TCP socket and connect to the address and socket port
-	try:
-		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	except:
-		print('Failed to create a socket')
-
-	try:
-		connSock.connect((serverAddr, int(serverPort)))
-	except:
-		print('Failed to connect to ', severAddr, ':', serverPort)
-
-	print("Connected to ", serverAddr, ":", serverPort)
-	connSock.send(b'p')
+def put_command(file, dataSock):
 
 	# Open the file
 	fileObj = open(file, "r")
@@ -140,7 +113,7 @@ def put_command(file, serverAddr, serverPort):
 			# Send the data!
 			while len(fileData) > numSent:
 				try:
-					numSent += connSock.send(fileData[numSent:].encode('ascii'))
+					numSent += dataSock.send(fileData[numSent:].encode('ascii'))
 				except:
 					print('Failed to send message')
 		
@@ -150,48 +123,24 @@ def put_command(file, serverAddr, serverPort):
 
 	print("Sent ", numSent, " bytes.")
 	fileObj.close()
+	dataSock.close()
 
 # Print out directory
-def ls_command(serverAddr, serverPort):
-	# Create a TCP socket and connect to the address and socket port
-	try:
-		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	except:
-		print('Failed to create a socket')
-
-	try:
-		connSock.connect((serverAddr, int(serverPort)))
-	except:
-		print('Failed to connect to ', severAddr, ':', serverPort)
+def ls_command(dataSock):
 	
-	print("Connected to ", serverAddr, ":", serverPort)
-	connSock.send(b'l')
 	numBytes = 0
-	numFiles = int(connSock.recv(2).decode('ascii'))
+	numFiles = int(dataSock.recv(2).decode('ascii'))
 	for i in range(numFiles):
-		length = connSock.recv(2).decode('ascii')
-		ls_data = connSock.recv(int(length)).decode('ascii')
+		length = dataSock.recv(2).decode('ascii')
+		ls_data = dataSock.recv(int(length)).decode('ascii')
 		print(ls_data)
 		numBytes = numBytes + len(ls_data)
 	print('Received ', numBytes, ' bytes.')
-	connSock.close()
+	dataSock.close()
 
 # Quit
 def quit_command():
-	# Create a TCP socket and connect to the address and socket port
-	try:
-		connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	except:
-		print('Failed to create a socket')
-
-	try:
-		connSock.connect((serverAddr, int(serverPort)))
-	except:
-		print('Failed to connect to ', severAddr, ':', serverPort)
-
-	print("Connected to ", serverAddr, ":", serverPort)
-
-	connSock.send(b'q')
+	dataSock.close()
 	quit()
 
 if __name__ == '__main__':
@@ -206,19 +155,43 @@ if __name__ == '__main__':
 	# Server port
 	serverPort = sys.argv[2]
 
+	connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	connSock.connect((serverAddr, int(serverPort)))
+	
+
+	print("Connected to the server socket")
+
+	welcomeSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	welcomeSock.bind(('',1235))
 	while True:
+		welcomeSock.listen(1)
+
 		# Get client command
 		text = input('ftp>  ')
 		args = text.split(' ')
 		
 		if(args[0] == 'get'):
-			get_command(args[1], serverAddr, serverPort)
+			connSock.send(b'g')
+			dataSock, addr = welcomeSock.accept()
+			get_command(args[1], dataSock)
 
 		if(args[0] == 'put'):
-			put_command(args[1], serverAddr, serverPort)
+			connSock.send(b'p')
+			dataSock, addr = welcomeSock.accept()
+			put_command(args[1], dataSock)
 
 		if(args[0] == 'ls'):
-			ls_command(serverAddr, serverPort)
+			connSock.send(b'l')
+			dataSock, addr = welcomeSock.accept()
+			ls_command(dataSock)
 
 		if(args[0] == 'quit'):
+			connSock.send(b'q')
+			dataSock, addr = welcomeSock.accept()
 			quit_command()
+
+		if(args[0] == 'end'):
+			connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			connSock.connect((serverAddr, int(serverPort)))
+			connSock.send(b'e')
+			quit()
