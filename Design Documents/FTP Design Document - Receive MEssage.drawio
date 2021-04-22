@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-22T20:31:32.954Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" etag="Uo4Dabycjpge_Xzl4Sza" version="14.6.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-04-22T21:04:13.006Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" etag="szHw6oV-itbW4S8vvB5M" version="14.6.3" type="github">
   <diagram id="MkUvNmN8QnzUUTjbKppb" name="Page-1">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -72,17 +72,17 @@
         <mxCell id="arC_zgi1LaCRXw-lu-qo-10" value="parses less than intended" style="endArrow=classic;html=1;" parent="1" edge="1">
           <mxGeometry x="0.6327" width="50" height="50" relative="1" as="geometry">
             <mxPoint x="720" y="190" as="sourcePoint" />
-            <mxPoint x="820" y="237" as="targetPoint" />
+            <mxPoint x="820" y="240" as="targetPoint" />
             <Array as="points">
               <mxPoint x="820" y="190" />
             </Array>
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="arC_zgi1LaCRXw-lu-qo-11" value="Error, buffer overflow" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="580" y="240" width="120" height="60" as="geometry" />
+        <mxCell id="arC_zgi1LaCRXw-lu-qo-11" value="Status Message: Error, buffer overflow" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="580" y="390" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="arC_zgi1LaCRXw-lu-qo-12" value="Error, message not fully parsed" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="arC_zgi1LaCRXw-lu-qo-12" value="Status Message:&amp;nbsp; Error, message not fully parsed" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="760" y="240" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="arC_zgi1LaCRXw-lu-qo-13" value="yes" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="arC_zgi1LaCRXw-lu-qo-14" edge="1">
@@ -96,6 +96,39 @@
         </mxCell>
         <mxCell id="arC_zgi1LaCRXw-lu-qo-14" value="Server successfully receives entire message" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="850" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-4Ih1WKE8rMPYhfLDUcS-2" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="639.5" y="320" as="sourcePoint" />
+            <mxPoint x="639.5" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-4Ih1WKE8rMPYhfLDUcS-3" value="Buffer Overflow" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="240" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-4Ih1WKE8rMPYhfLDUcS-6" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="819.5" y="300" as="sourcePoint" />
+            <mxPoint x="819.5" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-4Ih1WKE8rMPYhfLDUcS-7" value="Retry?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="360" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-4Ih1WKE8rMPYhfLDUcS-8" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="819.5" y="440" as="sourcePoint" />
+            <mxPoint x="560" y="130" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="820" y="530" />
+              <mxPoint x="560" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-4Ih1WKE8rMPYhfLDUcS-9" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="-4Ih1WKE8rMPYhfLDUcS-8">
+          <mxGeometry x="-0.9361" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
