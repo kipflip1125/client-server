@@ -3,7 +3,7 @@ Names and Emails
 Raphael Andaya - raphyand@csu.fullerton.edu
 William Huynh - WilliamTHuynh@csu.fullerton.edu
 Kevin Peralta - kevinaperalta@csu.fullerton.edu
-Jack Sichley - jsichley@csu.fullerton.edu
+Jake Sichley - jsichley@csu.fullerton.edu
 
 Programming Language
 ------------------------------------------------
