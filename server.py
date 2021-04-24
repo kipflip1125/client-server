@@ -8,7 +8,6 @@
 import socket
 import sys
 import os
-import pdb
 
 # The port on which to listen
 listenPort = sys.argv[1]
@@ -53,7 +52,7 @@ def recvAll(sock, numBytes):
 	return recvBuff
 
 # Send Data
-def get_command(file, clientSock, addr):
+def get_command(file, dataSock):
 	fileObj = open(file, "r")
 	numSent = 0
 	fileData = None
@@ -62,21 +61,21 @@ def get_command(file, clientSock, addr):
 		if fileData:
 			dataSizeStr = str(len(fileData))
 
-			while len(dataSizeStr) < 10:
-				dataSizeStr = "0" + dataSizeStr
+			dataSizeStr = dataSizeStr.rjust(10, '0')
 
 			fileData  = dataSizeStr + fileData
 			numSent = 0
 
 			while len(fileData) > numSent:
-				numSent += clientSock.send(fileData[numSent:].encode('ascii'))
-			clientSock.send(str(numSent).encode('ascii'))
+				numSent += dataSock.send(fileData[numSent:].encode('ascii'))
+			dataSock.send(str(numSent).encode('ascii'))
 		else:
 			break
 	fileObj.close()
+	dataSock.close()
 
 # Receive Data
-def put_command(clientSock, addr):
+def put_command(dataSock):
 	# The buffer to all data received from the
 	# the client.
 	fileData = ""
@@ -93,7 +92,7 @@ def put_command(clientSock, addr):
 
 	# Receive the first 10 bytes indicating the
 	# size of the file
-	fileSizeBuff = recvAll(clientSock, 10)
+	fileSizeBuff = recvAll(dataSock, 10)
 
 	# Get the file size
 	fileSize = int(fileSizeBuff)
@@ -101,54 +100,69 @@ def put_command(clientSock, addr):
 	print("The file size is ", fileSize)
 
 	# Get the file data
-	fileData = recvAll(clientSock, fileSize)
+	fileData = recvAll(dataSock, fileSize)
 
 	print("The file data is: ")
 	print(fileData)
 
 	# Close our side
-	clientSock.close()
+	dataSock.close()
 
-def ls_command(clientSock, addr):
+def ls_command(dataSock):
 	lst = os.listdir('.')
 	numSent = 0
 	lslen = len(lst)
-	clientSock.send(str(lslen).rjust(2,'0').encode('ascii'))
+	dataSock.send(str(lslen).rjust(2,'0').encode('ascii'))
 	for i in lst:
 		numSent = len(i)
-		while numSent < 3:
-			numSent = '0' + str(numSent)
-		clientSock.send(str(numSent).rjust(2,'0').encode('ascii'))
-		clientSock.send(i.encode('ascii'))
+		dataSock.send(str(numSent).rjust(2,'0').encode('ascii'))
+		dataSock.send(i.encode('ascii'))
+	dataSock.close()
 
-def quit_command(clientSock, addr):
-	clientSock.close()
-
-
+def quit_command(dataSock):
+	print("Socket to client was closed\n")
+	dataSock.close()
 
 # Accept connections forever
 if __name__ == '__main__':
+	print("Waiting for connections...")
+
+	# Accept connections
+	clientSock, addr = welcomeSock.accept()
+
+	print("Accepted connection from client: ", addr)
+	print("\n")
+
 	while True:
-		print("Waiting for connections...")
 
-		# Accept connections
-		clientSock, addr = welcomeSock.accept()
-
-		print("Accepted connection from client: ", addr)
-		print("\n")
-		pdb.set_trace()
 		command = clientSock.recv(1)
 
+		dataSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		dataSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+		try:
+			dataSock.connect(('', 1235))
+		except socket.error as e:
+				print("Error creating socket: %s", e)
+				sys.exit(1)
+
 		if(command == b'p'):
-			put_command(clientSock, addr)
+			put_command(dataSock)
 
 		if(command == b'g'):
-			fNamelen = clientSock.recv(1).decode('ascii')
-			fName = clientSock.recv(int(fNamelen)).decode('ascii')
-			get_command(fName, clientSock, addr)
+			fNamelen = dataSock.recv(2).decode('ascii')
+			fName = dataSock.recv(int(fNamelen)).decode('ascii')
+			get_command(fName, dataSock)
 
 		if(command == b'l'):
-			ls_command(clientSock, addr)
+			ls_command(dataSock)
 
 		if(command == b'q'):
-			quit_command(clientSock, addr)
+			quit_command(dataSock)
+			print("Waiting for connections...")
+
+			# Accept connections
+			clientSock, addr = welcomeSock.accept()
+
+			print("Accepted connection from client: ", addr)
+			print("\n")
